@@ -3,7 +3,8 @@ The subfolders and files contained in this repository can be used to reproduce t
 
 1. `data`: A folder with the .csv file used to create the network data. 
 2. `scripts`:  A folder with the script used to generate the results in the paper and extension of analysis.
-3. `MD_FinalProject_10_22.pdf`: A compiled pdf of initial network visualizations and replication of main analyses from Colby (2021). 
+3. `Colby (2021).pdf`: A pdf of the main paper. 
+4. `MD_FinalProject_10_22.pdf`: A compiled pdf of initial network visualizations and replication of main analyses from Colby (2021). 
    
 
 
