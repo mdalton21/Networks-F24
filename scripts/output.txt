@@ -1,0 +1,480 @@
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 29/10/2024 09:15:08
+New results follow.
+-----------------------------------
+
+RSiena version 1.4.7 (20 Feb 24)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 100.
+Effects object used: effects 
+Model Type:
+ Standard actor-oriented model 
+
+NB. Request for conditional estimation has been over-ridden.
+
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations is 1.0.
+Changing composition.
+Joiners/leavers option: 1
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.0100000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 7.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter dv                         1.5079
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  out-Jaccard similarity                          0.0000
+  4. eval:  same aggression_var                             0.0000
+  5. eval:  same subfaction_var                             0.0000
+  6. eval:  same militia_var                                0.0000
+  7. eval:  same role_var                                   0.0000
+
+
+Values of target statistics are
+  1. Amount of network change                                           113.0000
+  2. Number of reciprocated ties                                         38.0000
+  3. Out-Jaccard similarity                                               1.4661
+  4. Same values on aggression_var                                       34.0000
+  5. Same values on subfaction_var                                      120.0000
+  6. Same values on militia_var                                         115.0000
+  7. Same values on role_var                                             70.0000
+These were calculated from the data.
+
+ 7 parameters, 7 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 19176 iterations.
+Parameter estimates based on 16176 iterations,
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.0187  10.8283   0.0017 
+  2.   0.0700   7.1687   0.0098 
+  3.   0.0322   0.7622   0.0423 
+  4.   0.0177   5.9415   0.0030 
+  5.   0.3477  10.2926   0.0338 
+  6.   0.0570  10.1719   0.0056 
+  7.   0.0290   7.7583   0.0037 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1088 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 19176 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+ 1. rate:  basic rate parameter dv                                 3.9059  (   0.3617)
+ 2. eval:  reciprocity                                             4.7186  (   0.7649)
+ 3. eval:  out-Jaccard similarity                                  0.1305  (   3.2904)
+ 4. eval:  same aggression_var                                    -0.2000  (   0.4727)
+ 5. eval:  same subfaction_var                                     2.0553  (   0.5783)
+ 6. eval:  same militia_var                                        1.2292  (   0.3431)
+ 7. eval:  same role_var                                          -1.9095  (   0.3910)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.131     -0.006     -0.008     -0.005      0.004     -0.004     -0.002
+    -0.021      0.585     -0.090      0.054      0.058      0.008     -0.078
+    -0.007     -0.036     10.827      0.021     -0.332      0.016      0.347
+    -0.031      0.150      0.013      0.223      0.058     -0.026     -0.089
+     0.021      0.132     -0.175      0.213      0.334     -0.034     -0.089
+    -0.036      0.031      0.014     -0.162     -0.172      0.118      0.009
+    -0.012     -0.260      0.270     -0.480     -0.394      0.066      0.153
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 31.79 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 29/10/2024 09:15:40
+New results follow.
+-----------------------------------
+
+RSiena version 1.4.7 (20 Feb 24)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 200.
+Effects object used: effects 
+Model Type:
+ Standard actor-oriented model 
+
+NB. Request for conditional estimation has been over-ridden.
+
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations is 1.0.
+Changing composition.
+Joiners/leavers option: 1
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.0100000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 7.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter dv                         1.5079
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  indegree - popularity                           0.0000
+  4. eval:  same aggression_var                             0.0000
+  5. eval:  same subfaction_var                             0.0000
+  6. eval:  same militia_var                                0.0000
+  7. eval:  same role_var                                   0.0000
+
+
+Values of target statistics are
+  1. Amount of network change                                           113.0000
+  2. Number of reciprocated ties                                         38.0000
+  3. Sum of squared indegrees                                           406.0000
+  4. Same values on aggression_var                                       34.0000
+  5. Same values on subfaction_var                                      120.0000
+  6. Same values on militia_var                                         115.0000
+  7. Same values on role_var                                             70.0000
+These were calculated from the data.
+
+ 7 parameters, 7 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 19176 iterations.
+Parameter estimates based on 16176 iterations,
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -0.0133  10.6957  -0.0012 
+  2.   0.0567   7.2116   0.0079 
+  3.   3.5460  84.9146   0.0418 
+  4.  -0.0537   6.0674  -0.0088 
+  5.   0.1350  10.1238   0.0133 
+  6.   0.1297   9.9015   0.0131 
+  7.   0.0160   7.8795   0.0020 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.0994 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 19176 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+ 1. rate:  basic rate parameter dv                                 3.9070  (   0.3678)
+ 2. eval:  reciprocity                                             4.7310  (   0.9602)
+ 3. eval:  indegree - popularity                                   0.1818  (   0.1004)
+ 4. eval:  same aggression_var                                    -0.1894  (   0.4442)
+ 5. eval:  same subfaction_var                                     2.0410  (   0.5614)
+ 6. eval:  same militia_var                                        1.1980  (   0.3506)
+ 7. eval:  same role_var                                          -1.5481  (   0.4515)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.135     -0.040      0.001     -0.006     -0.006     -0.001      0.009
+    -0.114      0.922     -0.007      0.086      0.076      0.037     -0.132
+     0.027     -0.075      0.010      0.002     -0.008      0.000      0.030
+    -0.036      0.202      0.045      0.197      0.039     -0.012     -0.065
+    -0.031      0.141     -0.145      0.156      0.315     -0.023     -0.087
+    -0.004      0.110     -0.014     -0.076     -0.115      0.123     -0.003
+     0.054     -0.305      0.665     -0.325     -0.344     -0.017      0.204
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 30.94 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 29/10/2024 09:16:11
+New results follow.
+-----------------------------------
+
+RSiena version 1.4.7 (20 Feb 24)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 300.
+Effects object used: effects 
+Model Type:
+ Standard actor-oriented model 
+
+NB. Request for conditional estimation has been over-ridden.
+
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations is 1.0.
+Changing composition.
+Joiners/leavers option: 1
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.0100000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 7.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter dv                         1.5079
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  out-in degree^(1/2) assortativity               0.0000
+  4. eval:  same aggression_var                             0.0000
+  5. eval:  same subfaction_var                             0.0000
+  6. eval:  same militia_var                                0.0000
+  7. eval:  same role_var                                   0.0000
+
+
+Values of target statistics are
+  1. Amount of network change                                           113.0000
+  2. Number of reciprocated ties                                         38.0000
+  3. Sum of out-in degree^(1/2) products                                390.3785
+  4. Same values on aggression_var                                       34.0000
+  5. Same values on subfaction_var                                      120.0000
+  6. Same values on militia_var                                         115.0000
+  7. Same values on role_var                                             70.0000
+These were calculated from the data.
+
+ 7 parameters, 7 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 19176 iterations.
+Parameter estimates based on 16176 iterations,
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.  -0.2350   9.1614  -0.0257 
+  2.  -0.1740   5.8223  -0.0299 
+  3.   0.2039  45.3327   0.0045 
+  4.  -0.0197   5.4729  -0.0036 
+  5.   0.0123   8.8716   0.0014 
+  6.   0.0047   8.5960   0.0005 
+  7.   0.0837   7.1871   0.0116 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1797 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 19176 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+ 1. rate:  basic rate parameter dv                                 4.2749  (   0.5562)
+ 2. eval:  reciprocity                                             4.8274  (   0.6944)
+ 3. eval:  out-in degree^(1/2) assortativity                      -0.8981  (   0.2265)
+ 4. eval:  same aggression_var                                    -0.3032  (   0.4328)
+ 5. eval:  same subfaction_var                                     1.8699  (   0.5426)
+ 6. eval:  same militia_var                                        1.3238  (   0.3242)
+ 7. eval:  same role_var                                          -2.6452  (   0.4817)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.309      0.017     -0.075      0.003     -0.047      0.004     -0.120
+     0.044      0.482     -0.027      0.052      0.041      0.026     -0.081
+    -0.599     -0.169      0.051     -0.003     -0.006     -0.020      0.068
+     0.014      0.174     -0.027      0.187      0.012     -0.008     -0.071
+    -0.156      0.109     -0.051      0.051      0.294     -0.013     -0.052
+     0.021      0.118     -0.269     -0.054     -0.071      0.105     -0.023
+    -0.447     -0.242      0.624     -0.339     -0.201     -0.148      0.232
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 33.95 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 29/10/2024 09:16:45
+New results follow.
+-----------------------------------
+
+RSiena version 1.4.7 (20 Feb 24)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Current random number seed is 400.
+Effects object used: effects 
+Model Type:
+ Standard actor-oriented model 
+
+NB. Request for conditional estimation has been over-ridden.
+
+Estimation method: unconditional moment estimation
+.
+
+Time duration for simulations is 1.0.
+Changing composition.
+Joiners/leavers option: 1
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.0100000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 7.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter dv                         1.5079
+  2. eval:  reciprocity                                     0.0000
+  3. eval:  transitive triplets (1)                         0.0000
+  4. eval:  same aggression_var                             0.0000
+  5. eval:  same subfaction_var                             0.0000
+  6. eval:  same militia_var                                0.0000
+  7. eval:  same role_var                                   0.0000
+
+
+Values of target statistics are
+  1. Amount of network change                                           113.0000
+  2. Number of reciprocated ties                                         38.0000
+  3. Number of transitive triplets                                       16.0000
+  4. Same values on aggression_var                                       34.0000
+  5. Same values on subfaction_var                                      120.0000
+  6. Same values on militia_var                                         115.0000
+  7. Same values on role_var                                             70.0000
+These were calculated from the data.
+
+ 7 parameters, 7 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 19176 iterations.
+Parameter estimates based on 16176 iterations,
+convergence diagnostics, covariance and derivative matrices based on 3000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.1957  10.7012   0.0183 
+  2.   0.3993   7.0922   0.0563 
+  3.   0.7837   8.7303   0.0898 
+  4.   0.0730   5.9971   0.0122 
+  5.   0.3740  10.1828   0.0367 
+  6.   0.5970  10.0197   0.0596 
+  7.   0.0753   7.6838   0.0098 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.1538 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 19176 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+ 1. rate:  basic rate parameter dv                                 3.9042  (   0.3652)
+ 2. eval:  reciprocity                                             4.7217  (   0.8396)
+ 3. eval:  transitive triplets (1)                                 0.3377  (   0.6329)
+ 4. eval:  same aggression_var                                    -0.1995  (   0.4661)
+ 5. eval:  same subfaction_var                                     2.0537  (   0.5456)
+ 6. eval:  same militia_var                                        1.2398  (   0.3292)
+ 7. eval:  same role_var                                          -1.8863  (   0.3690)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.133      0.002     -0.002     -0.001     -0.003     -0.001      0.004
+     0.006      0.705      0.016      0.071      0.044      0.005     -0.096
+    -0.008      0.029      0.401     -0.017     -0.056      0.001      0.064
+    -0.006      0.182     -0.057      0.217      0.031     -0.012     -0.077
+    -0.015      0.095     -0.163      0.123      0.298     -0.024     -0.070
+    -0.010      0.019      0.006     -0.080     -0.135      0.108      0.009
+     0.027     -0.310      0.273     -0.450     -0.350      0.072      0.136
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 31.04 seconds.
