@@ -450,12 +450,14 @@ ggplot(scores) +
 dev.off()
 
 # rename columns
-rownames(scores) <- c("Pre-Arrest", "Post-Arrest", "Full Graph", 
+rownames(scores) <- c("Pre-Arrest Recip", "Post-Arrest ", "Full Graph", 
                       "Pre-Arrest", "Post-Arrest", "Full Graph")
 
 ## Create table of reciprocity and transitivity scores -----------------------------------------------
 recip_trans_tab <- knitr::kable(scores, booktabs = TRUE, digits=3, format = "latex", 
                                 table.envir = "table", position = "!h",
+                                row.names = c("Pre-Arrest", "Post-Arrest ", "Full Graph", 
+                                              "Pre-Arrest", "Post-Arrest", "Full Graph"),
                                 caption="Reciprocity and Transitivity Scores") %>%
   pack_rows(index = c("Reciprocity" = 3, "Transitivity" = 3))
 
