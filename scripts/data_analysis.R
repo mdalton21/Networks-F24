@@ -18,6 +18,7 @@ root <- ifelse(length(args) == 0, file.path(".."), args)
 dat_dir <- file.path(root, "data")
 fig_dir <- file.path(root, "figures")
 scr_dir <- file.path(root, "scripts")
+tab_dir <- file.path(root, "tables")
 
 color <- brewer.pal(4, "RdBu") # choosing a specific palette
 
@@ -416,7 +417,7 @@ texreg(l = list(m1_results, m2_results, m3_results, m4_results),
           custom.model.names = c("Alliances", "Reputation", "Strong-vs-weak",
                                  "Clustering"),
           main = "Table 1. SAOM Model Estimates - Replicated from Colby (2021)",
-          file = file.path(fig_dir, "table1.tex"))
+          file = file.path(tab_dir, "saom.tex"))
 
 ## -----------------------------------------------------------------------------
 ## Descriptive Extension (for 11/12 Update)
