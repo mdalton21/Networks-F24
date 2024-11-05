@@ -457,10 +457,11 @@ rownames(scores) <- c("Pre-Arrest Recip", "Post-Arrest Recip", "Full Graph Recip
 ## Create table of reciprocity and transitivity scores -----------------------------------------------
 recip_trans_tab <- knitr::kable(scores, booktabs = TRUE, digits=3, format = "latex", 
                                 table.envir = "table", position = "!h",
+                                col.names = NULL, 
                                 caption="Reciprocity and Transitivity Scores") %>%
   kableExtra::pack_rows(index = c("Reciprocity" = 3, "Transitivity" = 3))
 
-writeLines(recip_trans_tab, file.path(fig_dir, 'recip_trans_tab.tex')) ## save
+writeLines(recip_trans_tab, file.path(tab_dir, 'recip_trans_tab.tex')) ## save
 
 ## -------------------------------------
 ## Preferential Attachment
@@ -508,7 +509,7 @@ PA_tab <- knitr::kable(result_OS$alpha, booktabs = TRUE, digits=3, format = "lat
                          col.names = NULL, 
                          caption="Preferential Attachment") 
 
-writeLines(PA_tab, file.path(fig_dir, 'PA_tab.tex')) ## save
+writeLines(PA_tab, file.path(tab_dir, 'PA_tab.tex')) ## save
 
 ## -------------------------------------
 ## Community Detection
@@ -544,7 +545,7 @@ mods_tab <- knitr::kable(drugMods, booktabs = TRUE, digits=3, format = "latex",
                                 col.names = NULL, 
                                 caption="Modularity Scores") 
 
-writeLines(mods_tab, file.path(fig_dir, 'mods_tab.tex')) ## save
+writeLines(mods_tab, file.path(tab_dir, 'mods_tab.tex')) ## save
 
 ## Plotting Infomap for Pre-Arrest -----------------------------------------------
 infomap <- cluster_infomap(preNet) #Perform info map community detection
