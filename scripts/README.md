@@ -1,3 +1,3 @@
 # Scripts for Replication and Extension 
-1. `MD_FinalProject_10_22.Rmd` includes the initial network visualizations and replication of main analyses from Colby (2021). 
+1. `data_analysis.R` includes the initial network visualizations, descriptive extension, and replication of main analyses from Colby (2021). 
 
