@@ -461,13 +461,6 @@ recip_trans_tab <- knitr::kable(scores, booktabs = TRUE, digits=3, format = "lat
 
 writeLines(recip_trans_tab, file.path(fig_dir, 'recip_trans_tab.tex')) ## save
 
-# Dyad and Triad Census -----------------------------------------------
-igraph::dyad_census(preNet) # some one-way relationships, but mostly sparse 
-igraph::dyad_census(postNet) # couple reciprocal relationships, still mostly sparse 
-
-igraph::triad_census(preNet) # mostly empty triads
-igraph::triad_census(postNet) # mostly empty triads, but some 012 and 102
-
 ## -------------------------------------
 ## Preferential Attachment
 ## -------------------------------------
@@ -478,15 +471,49 @@ drug_EL <- drug_EL %>%
 
 drug_PAFit <- as.PAFit_net(as.matrix(drug_EL))
 
+## Plotting degree distribution -----------------------------------------------
+
+# Distribution of degree centrality at t=0 (pre-2017)
+png(file.path(fig_dir, "pre_PA_deg.png"), res=100)
+plot(drug_PAFit, slice = 0, plot = "degree", cex = 2, cex.axis = 1, cex.lab = 1) 
+dev.off()
+
+# Distribution of degree centrality at t=9 (2020)
+png(file.path(fig_dir, "post_PA_deg.png"), res=100)
+plot(drug_PAFit, slice = 1, plot = "degree", cex = 2, cex.axis = 1, cex.lab = 1) 
+dev.off()
+
+## Plotting Preferrential Attachment -----------------------------------------------
+# Network Plot at t=0 (pre-2017)
+png(file.path(fig_dir, "pre_PA.png"), res=100)
+plot(drug_PAFit, slice = 0, 
+     arrowhead.cex = 2, vertex.cex = 3,
+     vertex.col=color) 
+dev.off()
+
+# Network Plot at t=1 (post-2017)
+png(file.path(fig_dir, "post_PA.png"), res=100)
+plot(drug_PAFit, slice = 1, 
+     arrowhead.cex = 2, vertex.cex = 3,
+     vertex.col=color) 
+dev.off()
+
+## Preferrential Attachment Table -----------------------------------------------
 result_OS <- PAFit_oneshot(drug_PAFit)
 summary(result_OS)
+
+PA_tab <- knitr::kable(result_OS$alpha, booktabs = TRUE, digits=3, format = "latex", 
+                         table.envir = "table", position = "!h",
+                         col.names = NULL, 
+                         caption="Preferential Attachment") 
+
+writeLines(PA_tab, file.path(fig_dir, 'PA_tab.tex')) ## save
 
 ## -------------------------------------
 ## Community Detection
 ## -------------------------------------
-# Comparing Modularities -----------------------------------------------
+## Comparing Modularities -----------------------------------------------
 compare_modularity <- function(graph) {
-  all_mods <- list()  # List to hold modularity for network
     # Compute each clustering method
     infomap <- cluster_infomap(graph)            # Infomap
     lead_eig <- cluster_leading_eigen(graph)     # Leading Eigenvector
@@ -501,20 +528,24 @@ compare_modularity <- function(graph) {
       modularity(walktrap)
     )
     
-    # Store modularities for this graph
-    all_mods[[i]] <- modularities
-  
   # Convert list to a data frame for easy comparison
-  mod_df <- do.call(rbind, all_mods)
-  colnames(mod_df) <- c("Infomap", "Leading Eigenvector", "Spinglass", "Walktrap")
-  mod_df <- data.frame(mod_df)
+  mod_df <- data.frame(modularities)
+  rownames(mod_df) <- c("Infomap", "Leading Eigenvector", "Spinglass", "Walktrap")
   
   return(mod_df)
 }
 
 drugMods <- compare_modularity(main_graph) # Infomap performs the best!
 
-# Plotting Infomap for Pre-Arrest -----------------------------------------------
+## Create table of modularity scores -----------------------------------------------
+mods_tab <- knitr::kable(drugMods, booktabs = TRUE, digits=3, format = "latex", 
+                                table.envir = "table", position = "!h",
+                                col.names = NULL, 
+                                caption="Modularity Scores") 
+
+writeLines(mods_tab, file.path(fig_dir, 'mods_tab.tex')) ## save
+
+## Plotting Infomap for Pre-Arrest -----------------------------------------------
 infomap <- cluster_infomap(preNet) #Perform info map community detection
 membership(infomap)  # Shows the community each node belongs to
 sizes(infomap)       # Shows the sizes of the detected communities
@@ -529,7 +560,7 @@ plot(infomap, preNet, #visualize the communities identified by the infomap metho
 ) 
 dev.off()
 
-# Plotting Infomap for Post-Arrest -----------------------------------------------
+## Plotting Infomap for Post-Arrest -----------------------------------------------
 infomap <- cluster_infomap(postNet) #Perform info map community detection
 membership(infomap)  # Shows the community each node belongs to
 sizes(infomap)       # Shows the sizes of the detected communities
