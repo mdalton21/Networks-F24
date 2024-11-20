@@ -1,4 +1,4 @@
-# Data from Colby (2021) 
+# Data for Replication and Extension
 1. `drugnet.csv` is the main data file used for the analysis.
 2. `cartel_network.rds` is the main network object for faster loading.
 3. `blocks.rds` is the 7-block solution for role assignment, for faster loading. 
