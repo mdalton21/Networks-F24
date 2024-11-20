@@ -9,7 +9,7 @@
 
 ## libraries
 libs <- c("dplyr", "tidyverse", "RColorBrewer", "network", "igraph", "sna", "ggraph", 
-          "blockmodeling", "RSiena", "texreg", "intergraph", "PAFit")
+          "blockmodeling", "RSiena", "texreg", "intergraph", "PAFit", "ergm", "ContagionTest")
 sapply(libs, require, character.only = TRUE)
 
 ## paths - set wd as scripts folder
@@ -37,154 +37,7 @@ combined_graph <- graph_from_data_frame(edge_df) # turn into igraph
 
 combined_matrix <- as.matrix(as_adjacency_matrix(combined_graph)) # adjacency matrix
 
-main_graph <- edge_df %>% # distinct observations for igraph
-  distinct(sideA, sideB) %>% 
-  graph_from_data_frame()
-
-## -------------------------------------
-## Add structural equivalence group attribute
-## -------------------------------------
-
-## Create a 7 block solution ------------------------------
-blocks <- optRandomParC(M = combined_matrix, 
-                        k = 7,  
-                        rep = 100,  
-                        approaches = "ss", 
-                        blocks = "com",  
-                        seed = 42)
-
-## Assign actors to blocks
-V(main_graph)$role <- blocks$best$best1$clu
-
-# Convert roles to names ------------------------------
-V(main_graph)$role <- case_when(
-  V(main_graph)$role == 1 ~ "Gulf Cartel",
-  V(main_graph)$role == 2 ~ "Rising Challengers",
-  V(main_graph)$role == 3 ~ "Sinaloa Cartel",
-  V(main_graph)$role == 4 ~ "Small Cartels and Militias",
-  V(main_graph)$role == 5 ~ "Los Zetas",
-  V(main_graph)$role == 6 ~ "White Dwarfs",
-  V(main_graph)$role == 7 ~ "Cartel Jalisco Nueva Generacion",
-  TRUE ~ as.character(V(main_graph)$role)
-)
-
-## -------------------------------------
-## Add attribute for militia status
-## -------------------------------------
-
-## List of militia groups from replication code
-militias <- c("malinaltepec communal militia (mexico)", "chamula militia", 
-              "san pablo cuatro venados communal militia (mexico)", 
-              "dzan communal militia (mexico)", 
-              "el pinar communal militia (mexico)", 
-              "loma de la cruz communal militia (mexico)", 
-              "molinos los arcos communal militia (mexico)", 
-              "el carrizal de bravo communal militia (mexico)", 
-              "huahua communal militia (mexico)", 
-              "tlacotepec communal militia (mexico)", 
-              "maya indigenous militia (mexico)", 
-              "mixe indigenous militia (mexico)", 
-              "san agustin oapan communal militia (mexico)", 
-              "santa isabel de la reforma communal militia (mexico)", 
-              "aldama indigenous militia (mexico)", 
-              "san mateo yucutindoo communal militia (mexico)", 
-              "apetlanca communal militia (mexico)", 
-              "rio santiago communal militia (mexico)",
-              "yautepec communal militia (mexico)", 
-              "upoeg self defense group", 
-              "faction of front for security and development vigilante group", 
-              "totolapan self-defense force", "autodefensas unidas de michoacan", 
-              "alacatlatzala communal militia (mexico)", 
-              "chocomanatlan communal militia (mexico)", 
-              "coahuayutla de guerrero communal militia (mexico)", 
-              "cotija de la paz communal militia (mexico)", 
-              "cuilapam de guerrero communal militia (mexico)", 
-              "el cipresal communal militia (mexico)", 
-              "el nith communal militia (mexico)", 
-              "ezln: zapatista army of national liberation", 
-              "leonardo bravo communal militia (mexico)", 
-              "los reyes communal militia (mexico)", 
-              "san cristobal de las casas communal militia (mexico)", 
-              "san miguel tecuiciapan communal militia (mexico)", 
-              "santa maria nativitas coatlan communal militia (mexico)", 
-              "santa martha indigenous militia (mexico)", 
-              "santiago amoltepec communal militia (mexico)", 
-              "santiago miltepec communal militia (mexico)", 
-              "santo reyes zochiquilazala communal militia (mexico)", 
-              "tangancicuaro communal militia (mexico)", 
-              "tenquizolco communal militia (mexico)", 
-              "tepalcatepec communal militia (mexico)", 
-              "tinguindin communal militia (mexico)", 
-              "tocumbo communal militia (mexico)", 
-              "villa morelos communal militia (mexico)", 
-              "villa victoria communal militia (mexico)", 
-              "xochiltepec communal militia (mexico)",
-              "rival faction of front for security and development vigilante group")
-
-## Assign militia status to nodes ------------------------------
-V(main_graph)$militia <- ifelse(V(combined_graph)$name %in% militias, 1, 0)
-
-## -------------------------------------
-## Add aggressiveness attribute 
-## -------------------------------------
-
-## Convert the graph to a dataframe ------------------------------
-temp_vector <- as_data_frame(main_graph) %>% 
-  as_tibble() %>% 
-  select(from) %>% 
-  
-  ## Merge the vertices with the the aggression data for sending actors
-  left_join(drugnet %>% 
-              select(sideA, agression) %>% 
-              distinct(), 
-            by = c("from" = "sideA")) %>% 
-  distinct(from, agression) %>% 
-  
-  ## Add the sideB actors to the dataframe. 
-  full_join(drugnet %>% 
-              select(sideB, agression) %>% 
-              distinct(),
-            by = c("from" = "sideB")) %>% 
-  select(-agression.y) %>% 
-  rename("agression" = agression.x) %>% 
-  distinct(from, agression) %>% 
-  select(agression) %>% 
-  
-  ## Codes actors that never directed an attack as having an aggression of 0
-  mutate(agression = ifelse(is.na(agression), 0, agression)) %>% 
-  ungroup() %>% 
-  pull()
-
-## Assign aggression scores to vertices ------------------------------
-V(main_graph)$aggression <- temp_vector
-
-## -------------------------------------
-## Add subfaction attribute 
-## -------------------------------------
-
-subfaction <- vector(length = 151, mode = "numeric")
-
-## The indices of groups that are subfactions ------------------------------
-subfaction[c(8, 72, 74, 75, 77:79, 113, 134, 136:138, 142:146, 148, 149)] <- 1
-V(main_graph)$subfaction <- subfaction
-
-## -------------------------------------
-## Create time period before and after arrest
-## -------------------------------------
-
-## Create a vector of periods in which each tie existed ------------------------------
-period <- drugnet %>% 
-  mutate(period = ifelse(year < 2017, 1, 2)) %>% 
-  group_by(period, sideA, sideB) %>% 
-  ungroup() %>% 
-  distinct(sideA, sideB, period) %>% 
-  group_by(sideA, sideB) %>% 
-  summarise(period = max(period)) %>% 
-  ungroup() %>% 
-  pull(period)
-
-## Add a year attribute to the combined graph ------------------------------
-E(main_graph)$period <- period
+main_graph <- readRDS(file.path(dat_dir, "cartel_network.rds"), refhook = NULL) # load in full network object
 
 ## Split into two graphs for pre and post arrest ------------------------------
 preNet <- subgraph.edges(main_graph, E(main_graph)[E(main_graph)$period < 2])
@@ -387,6 +240,8 @@ dv <- sienaDependent(array(c(as.matrix(as_adjacency_matrix(t0_network)),
                            dim = c(151, 151, 2)))
 
 ## Create constant covariates objects
+blocks <- readRDS(file.path(dat_dir, "blocks.rds"))
+
 role_var <- coCovar(as.vector(blocks$best$best1$clu))
 militia_var <- coCovar(as.vector(V(main_graph)$militia))
 aggression_var <- coCovar(as.vector(V(main_graph)$aggression))
@@ -418,6 +273,13 @@ texreg(l = list(m1_results, m2_results, m3_results, m4_results),
                                  "Clustering"),
           main = "Table 1. SAOM Model Estimates - Replicated from Colby (2021)",
           file = file.path(tab_dir, "saom.tex"))
+
+
+## GOF Diagnostics --------------------------------------------------
+plot(btergm::gof(m1_results), main=NULL)
+plot(btergm::gof(m2_results), main=NULL)
+plot(btergm::gof(m3_results), main=NULL)
+plot(btergm::gof(m4_results), main=NULL)
 
 ## -----------------------------------------------------------------------------
 ## Descriptive Extension (for 11/12 Update)
@@ -583,6 +445,87 @@ dev.off()
 ## -------------------------------------
 ## ERGM Specification
 ## -------------------------------------
+
+## Switching to network objects ------------------------------
+
+# Convert igraph to adjacency matrix
+adj_matrix <- as_adjacency_matrix(main_graph, sparse = FALSE)
+
+# Create a network object
+drugNet <- network(adj_matrix, directed = is_directed(main_graph))
+
+# Transfer vertex attributes
+network::set.vertex.attribute(drugNet, "name", V(main_graph)$name)
+network::set.vertex.attribute(drugNet, "aggression", V(main_graph)$aggression)
+network::set.vertex.attribute(drugNet, "role", V(main_graph)$role)
+network::set.vertex.attribute(drugNet, "militia", V(main_graph)$militia)
+network::set.vertex.attribute(drugNet, "subfaction", V(main_graph)$subfaction)
+
+# Transfer edge attributes
+edge_list <- as_edgelist(main_graph)
+edge_period <- E(main_graph)$period
+network::set.edge.attribute(drugNet, "period", edge_period)
+
+## Baseline ERGM ------------------------------
+control <- control.ergm(MCMLE.maxit=10, seed=47)
+ergm_mod <- ergm(drugNet ~ edges + 
+                   nodecov("aggression") + 
+                   nodecov("militia") + 
+                   absdiff("aggression") +
+                   absdiff("militia"),
+                 control=control)
+
+screenreg(ergm_mod)
+
+## Dyad-Independent ERGM ------------------------------
+control <- control.ergm(MCMLE.maxit=10, seed=47)
+ergm_mod_DI <- ergm(drugNet ~ edges + 
+                   nodecov("aggression") + 
+                   nodecov("militia") + 
+                   absdiff("aggression") +
+                   absdiff("militia"),
+                 control=control)
+
+screenreg(ergm_mod_DI)
+
+## GOF Diagnostics --------------------------------------------------
+plot(gof(ergm_mod), main=NULL)
+plot(gof(ergm_mod_DI), main=NULL)
+
+## -------------------------------------
+## Contagion Checks
+## -------------------------------------
+
+# Formatting for split-halves test
+d1 <- STFormat(combined_matrix)
+
+# Running split-halves contagion test
+simmodels <- lag_pc_test(d1, 1000, 1, T, 0.05,
+                         1, F)
+summary(simmodels)
+
+# Summary of models
+simmodels <- as.data.frame(simmodels)
+names(simmodels) <- c("intercept","t-1coef","counterpart")
+
+# Calculate contagion signal
+xmean <- mean(simmodels$counterpart) ## input this in the plot
+xmean <- round(xmean, digits = 4)
+
+# P-value of the signal (proportion of results < 0)
+pval <- sum(simmodels$counterpart < 0) / 1000  ## pvalue
+pval <- round(pval, digits = 3)
+
+# Density graph of results
+density_graph(simmodels, 1000, xmean, 1, xmean, 0.5,
+              title = "Electoral Violence")
+
+
+## -----------------------------------------------------------------------------
+################################################################################
+
+
+
 
 
 
