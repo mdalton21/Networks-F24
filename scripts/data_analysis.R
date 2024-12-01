@@ -532,9 +532,9 @@ texreg(ergm_mod_DD,
                               "nodematch.subfaction" = "Subfaction Homophily", 
                               "nodematch.militia" = "Militia Homophily", 
                               "nodematch.role" = "Role Homophily",
-                              "mutual" = "Mutuality",
+                              "mutual" = "Reciprocity",
                               "isolates" = "Isolates",
-                              "gwesp.OTP.fixed.0" = "gwesp"),
+                              "gwesp.OTP.fixed.0" = "Transitivity (gwesp)"),
        label = "tab:ergm-DD",
        file = file.path(tab_dir, "ergm_DD.tex"))
 
