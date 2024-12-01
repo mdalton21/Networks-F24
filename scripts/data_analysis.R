@@ -276,10 +276,21 @@ texreg(l = list(m1_results, m2_results, m3_results, m4_results),
 
 
 ## GOF Diagnostics --------------------------------------------------
+png(file.path(fig_dir, "gof_m1.png"), res=100)
 plot(btergm::gof(m1_results), main=NULL)
+dev.off()
+
+png(file.path(fig_dir, "gof_m2.png"), res=100)
 plot(btergm::gof(m2_results), main=NULL)
+dev.off()
+
+png(file.path(fig_dir, "gof_m3.png"), res=100)
 plot(btergm::gof(m3_results), main=NULL)
+dev.off()
+
+png(file.path(fig_dir, "gof_m4.png"), res=100)
 plot(btergm::gof(m4_results), main=NULL)
+dev.off()
 
 ## -----------------------------------------------------------------------------
 ## Descriptive Extension (for 11/12 Update)
@@ -467,30 +478,79 @@ edge_period <- E(main_graph)$period
 network::set.edge.attribute(drugNet, "period", edge_period)
 
 ## Baseline ERGM ------------------------------
-control <- control.ergm(MCMLE.maxit=10, seed=47)
+control <- control.ergm(MCMLE.maxit=50, seed=47)
+set.seed(123)
 ergm_mod <- ergm(drugNet ~ edges + 
-                   nodecov("aggression") + 
-                   nodecov("militia") + 
+                   nodeicov("aggression") + 
+                   nodeocov("aggression") +
                    absdiff("aggression") +
-                   absdiff("militia"),
+                   nodeicov("subfaction") + 
+                   nodeocov("subfaction") +
+                   absdiff("subfaction") +
+                   nodeicov("militia") + 
+                   nodeocov("militia") +
+                   absdiff("militia") +
+                   nodematch("role"),
                  control=control)
 
-screenreg(ergm_mod)
+## Create a regression table -----------------------------------------------
+texreg(ergm_mod,
+       omit.coef = "basic rate parameter dv",
+       custom.coef.map = list("edges" = "Edges",
+                              "nodeicov.aggression" = "Receiver Aggression",
+                              "nodeocov.aggression" = "Sender Aggression",
+                              "absdiff.aggression" = "Aggression Difference",
+                              "nodeicov.subfaction" = "Receiver Subfaction",
+                              "nodeocov.subfaction" = "Sender Subfaction",
+                              "absdiff.subfaction" = "Subfaction Difference",
+                              "nodeicov.militia" = "Receiver Militia",
+                              "nodeocov.militia" = "Sender Militia",
+                              "absdiff.militia" = "Militia Difference",
+                              "nodematch.role" = "Role Homophily"),
+       label = "tab:ergm-baseline",
+       file = file.path(tab_dir, "ergm_baseline.tex"))
 
-## Dyad-Independent ERGM ------------------------------
-control <- control.ergm(MCMLE.maxit=10, seed=47)
-ergm_mod_DI <- ergm(drugNet ~ edges + 
-                   nodecov("aggression") + 
-                   nodecov("militia") + 
-                   absdiff("aggression") +
-                   absdiff("militia"),
-                 control=control)
+## Dyad-Dependent ERGM ------------------------------
+set.seed(123)
+ergm_mod_DD <- ergm::ergm(drugNet ~ edges + 
+                            absdiff("aggression") + 
+                            nodematch("subfaction") + 
+                            nodematch("militia") + 
+                            nodematch("role") +
+                            mutual +
+                            isolates + 
+                            gwesp(0, fixed=T), 
+                          control = control)
 
-screenreg(ergm_mod_DI)
+screenreg(ergm_mod_DD)
+
+## Create a regression table -----------------------------------------------
+texreg(ergm_mod_DD,
+       omit.coef = "basic rate parameter dv",
+       custom.coef.map = list("edges" = "Edges",
+                              "absdiff.aggression" = "Aggression Difference",
+                              "nodematch.subfaction" = "Subfaction Homophily", 
+                              "nodematch.militia" = "Militia Homophily", 
+                              "nodematch.role" = "Role Homophily",
+                              "mutual" = "Mutuality",
+                              "isolates" = "Isolates",
+                              "gwesp.OTP.fixed.0" = "gwesp"),
+       label = "tab:ergm-DD",
+       file = file.path(tab_dir, "ergm_DD.tex"))
+
 
 ## GOF Diagnostics --------------------------------------------------
-plot(gof(ergm_mod), main=NULL)
-plot(gof(ergm_mod_DI), main=NULL)
+png(file.path(fig_dir, "mcmc_dd.png"))
+mcmc.diagnostics(ergm_mod_DD, which="plots")
+dev.off()
+
+png(file.path(fig_dir, "gof_ergm.png"))
+plot(btergm::gof(ergm_mod), main=NULL)
+dev.off()
+
+png(file.path(fig_dir, "gof_dd.png"))
+plot(btergm::gof(ergm_mod_DD))
+dev.off()
 
 ## -------------------------------------
 ## Contagion Checks
@@ -517,9 +577,10 @@ pval <- sum(simmodels$counterpart < 0) / 1000  ## pvalue
 pval <- round(pval, digits = 3)
 
 # Density graph of results
+png(file.path(fig_dir, "contagion.png"))
 density_graph(simmodels, 1000, xmean, 1, xmean, 0.5,
-              title = "Electoral Violence")
-
+              title = "Cartel In-Fighting")
+dev.off()
 
 ## -----------------------------------------------------------------------------
 ################################################################################
