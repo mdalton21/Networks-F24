@@ -477,66 +477,76 @@ edge_list <- as_edgelist(main_graph)
 edge_period <- E(main_graph)$period
 network::set.edge.attribute(drugNet, "period", edge_period)
 
+## Standardizing aggression attributes ------------------------------
+# Aggression
+aggression <- network::get.vertex.attribute(drugNet, "aggression")
+scaled_aggression <- as.vector(scale(aggression))
+
+# Assign the standardized attribute back to the network
+network::set.vertex.attribute(drugNet, "aggression", scaled_aggression)
+
+
 ## Baseline ERGM ------------------------------
 control <- control.ergm(MCMLE.maxit=50, seed=47)
 set.seed(123)
 ergm_mod <- ergm(drugNet ~ edges + 
                    nodeicov("aggression") + 
                    nodeocov("aggression") +
-                   absdiff("aggression") +
+                   absdiff("aggression") + 
                    nodeicov("subfaction") + 
                    nodeocov("subfaction") +
-                   absdiff("subfaction") +
+                   nodematch("subfaction") + 
                    nodeicov("militia") + 
                    nodeocov("militia") +
-                   absdiff("militia") +
+                   nodematch("militia") + 
                    nodematch("role"),
                  control=control)
 
-## Create a regression table -----------------------------------------------
-texreg(ergm_mod,
-       omit.coef = "basic rate parameter dv",
-       custom.coef.map = list("edges" = "Edges",
-                              "nodeicov.aggression" = "Receiver Aggression",
-                              "nodeocov.aggression" = "Sender Aggression",
-                              "absdiff.aggression" = "Aggression Difference",
-                              "nodeicov.subfaction" = "Receiver Subfaction",
-                              "nodeocov.subfaction" = "Sender Subfaction",
-                              "absdiff.subfaction" = "Subfaction Difference",
-                              "nodeicov.militia" = "Receiver Militia",
-                              "nodeocov.militia" = "Sender Militia",
-                              "absdiff.militia" = "Militia Difference",
-                              "nodematch.role" = "Role Homophily"),
-       label = "tab:ergm-baseline",
-       file = file.path(tab_dir, "ergm_baseline.tex"))
+summary(ergm_mod)
+
+## node fixed effects term - sender() and receiver()
+## nodeifactor and nodeofactor 
+## delete bottom rows from textreg 
 
 ## Dyad-Dependent ERGM ------------------------------
+control <- control.ergm(MCMLE.maxit=50, seed=47)
 set.seed(123)
 ergm_mod_DD <- ergm::ergm(drugNet ~ edges + 
+                            nodeicov("aggression") + 
+                            nodeocov("aggression") +
                             absdiff("aggression") + 
+                            nodeicov("subfaction") + 
+                            nodeocov("subfaction") +
                             nodematch("subfaction") + 
+                            nodeicov("militia") + 
+                            nodeocov("militia") +
                             nodematch("militia") + 
-                            nodematch("role") +
-                            mutual +
-                            isolates + 
-                            gwesp(0, fixed=T), 
+                            nodematch("role") + 
+                            mutual + 
+                            gwesp(0.5, fixed=T), 
                           control = control)
 
 screenreg(ergm_mod_DD)
 
+
 ## Create a regression table -----------------------------------------------
-texreg(ergm_mod_DD,
+texreg(list(ergm_mod, ergm_mod_DD),
        omit.coef = "basic rate parameter dv",
        custom.coef.map = list("edges" = "Edges",
-                              "absdiff.aggression" = "Aggression Difference",
-                              "nodematch.subfaction" = "Subfaction Homophily", 
-                              "nodematch.militia" = "Militia Homophily", 
+                              "nodeicov.aggression" = "Receiver Aggression",
+                              "nodeocov.aggression" = "Sender Aggression",
+                              "absdiff.aggression" = "Aggression Homophily",
+                              "nodeicov.subfaction" = "Receiver Subfaction",
+                              "nodeocov.subfaction" = "Sender Subfaction",
+                              "nodematch.subfaction" = "Subfaction Homophily",
+                              "nodeicov.militia" = "Receiver Militia",
+                              "nodeocov.militia" = "Sender Militia",
+                              "nodematch.militia" = "Militia Homophily",
                               "nodematch.role" = "Role Homophily",
                               "mutual" = "Reciprocity",
-                              "isolates" = "Isolates",
-                              "gwesp.OTP.fixed.0" = "Transitivity (gwesp)"),
-       label = "tab:ergm-DD",
-       file = file.path(tab_dir, "ergm_DD.tex"))
+                              "gwesp.OTP.fixed.0.5" = "Transitivity (gwesp)"),
+       label = "tab:ergms",
+       file = file.path(tab_dir, "ergms.tex"))
 
 
 ## GOF Diagnostics --------------------------------------------------
@@ -550,36 +560,6 @@ dev.off()
 
 png(file.path(fig_dir, "gof_dd.png"))
 plot(btergm::gof(ergm_mod_DD))
-dev.off()
-
-## -------------------------------------
-## Contagion Checks
-## -------------------------------------
-
-# Formatting for split-halves test
-d1 <- STFormat(combined_matrix)
-
-# Running split-halves contagion test
-simmodels <- lag_pc_test(d1, 1000, 1, T, 0.05,
-                         1, F)
-summary(simmodels)
-
-# Summary of models
-simmodels <- as.data.frame(simmodels)
-names(simmodels) <- c("intercept","t-1coef","counterpart")
-
-# Calculate contagion signal
-xmean <- mean(simmodels$counterpart) ## input this in the plot
-xmean <- round(xmean, digits = 4)
-
-# P-value of the signal (proportion of results < 0)
-pval <- sum(simmodels$counterpart < 0) / 1000  ## pvalue
-pval <- round(pval, digits = 3)
-
-# Density graph of results
-png(file.path(fig_dir, "contagion.png"))
-density_graph(simmodels, 1000, xmean, 1, xmean, 0.5,
-              title = "Cartel In-Fighting")
 dev.off()
 
 ## -----------------------------------------------------------------------------
